@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ta'lim bilimdonlari</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4F6F9;--card:#fff;--ink:#14202E;--mut:#5B6B7E;--line:#D5DCE5;--t1:#D9481F;--t2:#0E8A97;--t3:#C98A0A;--ok:#1E8E4E;--no:#C0392B;--on:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1720;--card:#192433;--ink:#EEF2F7;--mut:#9AABBF;--line:#2B3A4E;--t1:#FF7A52;--t2:#35C2D1;--t3:#F2B134;--ok:#4CC380;--no:#FF6B5B}}
+:root[data-theme="dark"]{--bg:#0F1720;--card:#192433;--ink:#EEF2F7;--mut:#9AABBF;--line:#2B3A4E;--t1:#FF7A52;--t2:#35C2D1;--t3:#F2B134;--ok:#4CC380;--no:#FF6B5B}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+h1,h2,.num,.big{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;color:inherit}
+button:focus-visible,[contenteditable]:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+header{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;flex-wrap:wrap}
+h1{margin:0;font-size:clamp(22px,3vw,34px);font-weight:800;flex:1}
+.ghost{background:var(--card);border:1px solid var(--line);padding:8px 14px;font-size:15px}
+.score{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:10px 20px}
+.team{background:var(--card);border:2px solid var(--line);border-top:8px solid var(--c);border-radius:14px;padding:10px 14px;text-align:center}
+.team .name{font-weight:700;font-size:clamp(16px,2vw,22px);outline:none;min-height:1.4em}
+.team .pts{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(40px,7vw,84px);line-height:1;color:var(--c)}
+.team .adj{display:flex;gap:6px;justify-content:center;margin-top:6px}
+.adj button{background:var(--bg);border:1px solid var(--line);padding:4px 12px;font-size:15px}
+.tabs{display:flex;gap:8px;padding:8px 20px;flex-wrap:wrap}
+.tab{background:var(--card);border:2px solid var(--line);padding:10px 18px;font-weight:700}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+main{padding:6px 20px 28px}
+.rule{color:var(--mut);margin:4px 0 14px;max-width:80ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}
+.q{aspect-ratio:1.3;background:var(--card);border:2px solid var(--line);font-size:clamp(28px,4vw,48px);font-weight:800}
+.q:hover{border-color:var(--ink)}.q.done{opacity:.35;text-decoration:line-through}
+.modal{position:fixed;inset:0;background:rgba(10,16,24,.78);display:none;align-items:center;justify-content:center;padding:16px;z-index:9}
+.modal.open{display:flex}
+.box{background:var(--card);border-radius:20px;width:min(980px,100%);max-height:100%;overflow:auto;padding:clamp(16px,3vw,32px)}
+.qt{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:clamp(24px,3.6vw,42px);line-height:1.25;margin:6px 0 14px}
+.meta{display:flex;justify-content:space-between;align-items:center;color:var(--mut)}
+.timer{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:44px;color:var(--ink)}.timer.low{color:var(--no)}
+.ans{display:none;background:var(--bg);border-left:8px solid var(--ok);border-radius:10px;padding:12px 16px;font-size:clamp(20px,3vw,32px);font-weight:700;margin-bottom:14px}
+.ans.show{display:block}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.reveal{background:var(--ink);color:var(--bg);padding:12px 22px;font-weight:700}
+.awards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.aw{border:2px solid var(--c);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.aw b{color:var(--c);font-size:18px}
+.aw button{padding:12px 6px;font-weight:700;font-size:17px;background:var(--bg);border:1px solid var(--line)}
+.aw .good:hover{background:var(--ok);color:#fff}.aw .bad:hover{background:var(--no);color:#fff}
+.aw button.used{opacity:.4;pointer-events:none}
+.aw input{font:inherit;width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.close{background:transparent;border:1px solid var(--line);padding:10px 20px;font-weight:700}
+.win{font-size:clamp(20px,3vw,30px);font-weight:700;text-align:center;padding:10px}
+@media(max-width:700px){.score,.awards{grid-template-columns:1fr}.team .pts{font-size:44px}}
+@media(prefers-reduced-motion:no-preference){.modal.open .box{animation:pop .18s ease-out}@keyframes pop{from{transform:scale(.96);opacity:0}}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Ta'lim bilimdonlari</h1>
+  <button class="ghost" id="reset">Yangi o'yin</button>
+  <button class="ghost" id="theme">Tun / kun</button>
+</header>
+<section class="score" id="score" aria-label="Ball jadvali"></section>
+<nav class="tabs" id="tabs" role="tablist"></nav>
+<main>
+  <p class="rule" id="rule"></p>
+  <div class="grid" id="grid"></div>
+  <div class="win" id="win"></div>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="qt">
+  <div class="box">
+    <div class="meta"><span id="mtag"></span><span class="timer" id="timer">30</span></div>
+    <div class="qt" id="qt"></div>
+    <div class="ans" id="ans"></div>
+    <div class="row">
+      <button class="reveal" id="rev">Javobni ko'rsatish</button>
+      <button class="close" id="timerBtn">Taymer</button>
+      <button class="close" id="cl">Yopish</button>
+    </div>
+    <div class="awards" id="awards"></div>
+  </div>
+</div>
+
+<script>
+const TEAMS=[{n:"Bilimdonlar",c:"var(--t1)"},{n:"Ustozlar",c:"var(--t2)"},{n:"Kelajak",c:"var(--t3)"}];
+const S=[
+{t:"1. Tarix sahifalari",rule:"Navbat bilan javob beriladi. To'g'ri javob +10 ball. Javob bera olmasa, savol keyingi guruhga o'tadi: +5 ball.",btn:[["+10",10,"good"],["+5",5,"good"]],time:30,q:[
+["\"Algebra\" fanining asoschisi hisoblangan buyuk vatandoshimiz kim?","Muhammad al-Xorazmiy"],
+["Mirzo Ulug'bek qurdirgan mashhur rasadxona qaysi shaharda joylashgan?","Samarqand"],
+["\"Qutadg'u bilig\" asarining muallifi kim?","Yusuf Xos Hojib"],
+["\"Tib qonunlari\" asarining muallifi kim?","Abu Ali ibn Sino"],
+["Jadidchilik harakati joriy etgan yangi maktablar nima deb atalgan?","Usuli jadid maktablari"],
+["\"Padarkush\" dramasining muallifi, jadid ma'rifatparvar kim?","Mahmudxo'ja Behbudiy"],
+["O'zbekistonda Bilimlar kuni qachon nishonlanadi?","1-sentabr"],
+["Ustoz va murabbiylar kuni qachon nishonlanadi?","1-oktabr"],
+["Ulug'bekning mashhur asari qanday nomlanadi?","\"Ziji jadidi Ko'ragoniy\""],
+["Abu Nasr Forobiy qanday laqab bilan mashhur?","\"Sharq Aristoteli\" (Muallimi soniy)"],
+["Alisher Navoiyning ta'lim-tarbiyaga oid mashhur asari qaysi?","\"Mahbub ul-qulub\""],
+["\"Pedagogika\" so'zi qaysi tildan olingan?","Qadimgi yunon tilidan (bolani yetaklovchi)"]]},
+{t:"2. Pedagogika olami",rule:"Tezkor bosqich: birinchi bo'lib qo'ng'iroq chalgan guruh javob beradi. To'g'ri +10, noto'g'ri −5.",btn:[["+10",10,"good"],["−5",-5,"bad"]],time:20,q:[
+["Sinf-dars tizimining asoschisi kim?","Yan Amos Komenskiy"],
+["\"Yaqinlashuvchi rivojlanish zonasi\" tushunchasini kim ishlab chiqqan?","Lev Vygotskiy"],
+["O'quv maqsadlari taksonomiyasi (eslash, tushunish, qo'llash...) muallifi kim?","Benjamin Bloom"],
+["Italiyalik shifokor, o'z nomidagi bolalar ta'limi metodini yaratgan ayol kim?","Mariya Montessori"],
+["\"Kindergarten\" (bolalar bog'chasi) tushunchasini kim joriy etgan?","Fridrix Frebel"],
+["STEAM qisqartmasi nimani anglatadi?","Fan, Texnologiya, Muhandislik, San'at, Matematika"],
+["PISA nima?","15 yoshli o'quvchilarning bilimini baholovchi xalqaro tadqiqot"],
+["Axborot-kommunikatsiya texnologiyalarining qisqartmasi nima?","AKT"],
+["Dars boshida mavzuga qiziqish uyg'otish uchun beriladigan savol yoki vaziyat nima deb ataladi?","Motivatsiya (qiziqtirish)"],
+["Baho qo'yilmaydigan, o'quvchi o'sishini kuzatish uchun o'tkaziladigan baholash turi qanday ataladi?","Formativ baholash"]]},
+{t:"3. Rost yoki yolg'on?",rule:"Xonaning bir tomoni ROST, ikkinchisi YOLG'ON. Guruh 10 soniyada kelishadi va hamma bir tomonga o'tadi. Hamma to'g'ri tursa +10, bitta a'zo boshqacha tursa 0.",btn:[["+10",10,"good"]],time:10,q:[
+["Inklyuziv ta'lim imkoniyati cheklangan bolalarni umumiy sinflarda o'qitishni nazarda tutadi.","ROST"],
+["\"Kindergarten\" so'zi nemis tilidan olingan.","ROST"],
+["Bloom taksonomiyasida eng yuqori daraja \"eslab qolish\"dir.","YOLG'ON (eng yuqorisi: yaratish va baholash)"],
+["\"Teskari sinf\" usulida yangi mavzu uyda o'rganiladi, sinfda esa amaliy mashq qilinadi.","ROST"],
+["Mahmudxo'ja Behbudiy jadidchilik harakati vakili emas.","YOLG'ON"],
+["Xorazmiy matematika va astronomiya sohasida ham ilmiy ish olib borgan.","ROST"]]},
+{t:"4. Super final",rule:"Har guruh ballidan tikadi. To'g'ri javobda tikilgan ball ikki baravar qo'shiladi, noto'g'ri bo'lsa ayiriladi. Savollardan birini tanlang.",final:1,time:60,q:[
+["Pedagogikada o'quvchilar kichik guruhlarda hamkorlikda ishlashi nima deb ataladi?","Hamkorlikda o'qitish (kooperativ ta'lim)"],
+["\"Yangi O'zbekiston\" strategiyasi doirasida maktabgacha ta'limni rivojlantirishga qaratilgan bitta islohotni ayting va nima uchun muhimligini bir gapda izohlang.","Ochiq savol: mantiqli va asosli javob qabul qilinadi."]]}
+];
+let pts,done,cur,sg,qi,iv,left,used;
+const $=id=>document.getElementById(id);
+function init(){pts=[0,0,0];done={};cur=0;render()}
+function render(){
+  $("score").innerHTML=TEAMS.map((t,i)=>`<div class="team" style="--c:${t.c}"><div class="name" contenteditable="true" spellcheck="false" data-i="${i}">${t.n}</div><div class="pts">${pts[i]}</div><div class="adj"><button data-a="${i},-5">−5</button><button data-a="${i},5">+5</button></div></div>`).join("");
+  $("tabs").innerHTML=S.map((s,i)=>`<button class="tab" role="tab" aria-selected="${i==cur}" data-s="${i}">${s.t}</button>`).join("");
+  const s=S[cur];$("rule").textContent=s.rule;
+  $("grid").innerHTML=s.q.map((_,i)=>`<button class="q ${done[cur+"_"+i]?"done":""}" data-q="${i}">${i+1}</button>`).join("");
+  const m=Math.max(...pts);
+  $("win").textContent=(cur==3&&Object.keys(done).some(k=>k.startsWith("3_")))?"Yetakchi: "+TEAMS.filter((_,i)=>pts[i]==m).map(t=>t.n).join(" va ")+" ("+m+" ball)":"";
+}
+function tick(){left--;$("timer").textContent=left;$("timer").classList.toggle("low",left<=5);if(left<=0)clearInterval(iv)}
+function startTimer(){clearInterval(iv);left=S[sg].time+1;$("timer").classList.remove("low");tick();iv=setInterval(tick,1000)}
+function open_(i){
+  sg=cur;qi=i;used={};const s=S[sg];
+  $("mtag").textContent=s.t+" · savol "+(i+1);$("qt").textContent=s.q[i][0];
+  $("ans").textContent=s.q[i][1];$("ans").classList.remove("show");$("rev").style.display="";
+  $("timer").textContent=s.time;$("timer").classList.remove("low");clearInterval(iv);
+  $("awards").innerHTML=TEAMS.map((t,k)=>`<div class="aw" style="--c:${t.c}"><b>${t.n}</b>`+(s.final?`<input type="number" min="0" placeholder="Tikilgan ball" data-w="${k}"><button class="good" data-f="${k},1">To'g'ri (×2)</button><button class="bad" data-f="${k},0">Noto'g'ri (−tikish)</button>`:s.btn.map(b=>`<button class="${b[2]}" data-p="${k},${b[1]}">${b[0]}</button>`).join(""))+`</div>`).join("");
+  $("modal").classList.add("open");
+}
+function close_(){clearInterval(iv);$("modal").classList.remove("open");done[sg+"_"+qi]=1;render()}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  const d=b.dataset;
+  if(d.s!==undefined){cur=+d.s;render()}
+  else if(d.q!==undefined)open_(+d.q);
+  else if(d.a){const[i,v]=d.a.split(",").map(Number);pts[i]+=v;render()}
+  else if(d.p){const[k,v]=d.p.split(",").map(Number);pts[k]+=v;used[k]=1;b.parentNode.querySelectorAll("button").forEach(x=>x.classList.add("used"));render()}
+  else if(d.f){const[k,ok]=d.f.split(",").map(Number);const w=Math.max(0,+(b.parentNode.querySelector("input").value)||0);pts[k]+=ok?2*w:-w;b.parentNode.querySelectorAll("button,input").forEach(x=>{x.classList.add("used");x.disabled=true});render()}
+  else if(b.id=="rev"){$("ans").classList.add("show");b.style.display="none"}
+  else if(b.id=="timerBtn")startTimer();
+  else if(b.id=="cl")close_();
+  else if(b.id=="reset"){if(confirm("Yangi o'yinni boshlaysizmi? Barcha ballar o'chadi.")){TEAMS.forEach(t=>{});init()}}
+  else if(b.id=="theme"){const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme=="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"}
+});
+document.addEventListener("input",e=>{const n=e.target.closest(".name");if(n)TEAMS[+n.dataset.i].n=n.textContent});
+document.addEventListener("keydown",e=>{if(e.key=="Escape"&&$("modal").classList.contains("open"))close_()});
+init();
+</script>
+</body>
+</html>
